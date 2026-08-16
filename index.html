@@ -89,6 +89,16 @@
 
   </div>
 
+<form id="signup-form" action="https://formspree.io/f/xgawlpjk" method="POST" style="display:flex;flex-wrap:wrap;gap:var(--space-3);width:100%;max-width:420px;justify-content:center;">
+  <input id="email-input" name="email" class="email-input" type="email" required placeholder="your@email.com">
+  <button type="submit" class="cta-btn">Notify me</button>
+</form>
+
+<div id="signup-done" style="display:none;align-items:center;gap:var(--space-2);font-family:var(--font-body);color:var(--text-on-dark);font-weight:600;font-size:1.0625rem;">
+  <span style="width:8px;height:8px;border-radius:50%;background:var(--orange);animation:pulseDot 1.6s ease-in-out infinite;"></span>
+  You're on the list. We'll be in touch.
+</div>
+  
   <div style="position:relative;z-index:2;margin-top:var(--space-12);display:flex;align-items:center;gap:var(--space-5);font-family:var(--font-body);color:var(--text-on-dark-muted);font-size:0.9375rem;">
     <a href="https://www.instagram.com/unordinary.digital/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;color:var(--text-on-dark-muted);">
       <i data-feather="instagram" style="width:16px;height:16px;"></i>
@@ -105,15 +115,24 @@
 
   const form = document.getElementById('signup-form');
   const done = document.getElementById('signup-done');
-  form.addEventListener('submit', function(e){
+
+  form.addEventListener('submit', async function(e){
     e.preventDefault();
     const email = document.getElementById('email-input').value;
     if (!email) return;
-    // TODO: wire this up to your actual mailing list (Mailchimp, Formspree, etc.)
-    form.style.display = 'none';
-    done.style.display = 'flex';
+
+    try {
+      await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+      form.style.display = 'none';
+      done.style.display = 'flex';
+    } catch (err) {
+      alert('Something went wrong, please try again.');
+    }
   });
 </script>
-
 </body>
 </html>
